@@ -30,10 +30,10 @@
     }
   ],
   "redirects": [
-    { "source": "/meet-your-curbelo-coach", "destination": "/about", "permanent": true },
-    { "source": "/learn-more", "destination": "/how-we-help", "permanent": true },
-    { "source": "/resources/the-dog-days-of-summer", "destination": "/blog/dog-days-of-summer", "permanent": true },
-    { "source": "/resources/holiday-spending-and-being-financially-responsible", "destination": "/blog/holiday-spending", "permanent": true },
-    { "source": "/resources/holiday-spending-and-being-financially-responsible-66gma", "destination": "/blog/goal-vs-why", "permanent": true }
+    { "source": "/meet-your-curbelo-coach/:path*", "destination": "/about/", "permanent": true },
+    { "source": "/learn-more/:path*", "destination": "/how-we-help/", "permanent": true },
+    { "source": "/resources/the-dog-days-of-summer/:path*", "destination": "/blog/dog-days-of-summer/", "permanent": true },
+    { "source": "/resources/holiday-spending-and-being-financially-responsible-66gma/:path*", "destination": "/blog/goal-vs-why/", "permanent": true },
+    { "source": "/resources/holiday-spending-and-being-financially-responsible/:path*", "destination": "/blog/holiday-spending/", "permanent": true }
   ]
 }

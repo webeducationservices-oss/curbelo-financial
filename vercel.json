@@ -5,7 +5,8 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "X-Frame-Options", "value": "ALLOWALL" },
+        { "key": "Content-Security-Policy", "value": "frame-ancestors https://myaieditor.com https://myaiediter.com https://*.vercel.app http://localhost:3000 http://localhost:*" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]

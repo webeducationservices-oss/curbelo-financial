@@ -606,8 +606,8 @@ main { min-height: 60vh; }
 
 @media (max-width: 600px) {
   .hero { min-height: auto; padding: 3rem 0 4rem; }
-  .hero h1 { min-height: 140px; }
-  .hero-sub { min-height: 100px; }
+  .hero h1 { min-height: auto; }
+  .hero-sub { min-height: auto; }
   .hero-card { transform: none; max-width: 380px; margin: 0 auto; }
   .hero-card img { aspect-ratio: 1; }
 }

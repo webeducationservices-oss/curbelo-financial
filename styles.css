@@ -252,6 +252,13 @@ main { min-height: 60vh; }
 .announce a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .announce strong { font-weight: 700; }
 
+@media (max-width: 600px) {
+  .announce {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+  }
+}
+
 /* ── NAVIGATION ─────────────────────────────────────────── */
 .nav {
   position: sticky;

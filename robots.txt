@@ -3,4 +3,4 @@ Allow: /
 Disallow: /thank-you/
 Disallow: /404
 
-Sitemap: https://curbelofinancialcoaching.com/sitemap.xml
+Sitemap: https://www.curbelofinancialcoaching.com/sitemap.xml

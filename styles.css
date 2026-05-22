@@ -247,7 +247,7 @@ main { min-height: 60vh; }
   text-align: center;
   padding: 0.625rem 1rem;
   position: relative;
-  z-index: 1001;
+  z-index: 999;
 }
 .announce a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .announce strong { font-weight: 700; }

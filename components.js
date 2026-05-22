@@ -115,7 +115,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
           }),
-          fetch('/api/lead', {
+          fetch('/api/lead/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -161,7 +161,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
           }),
-          fetch('/api/lead', {
+          fetch('/api/lead/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)

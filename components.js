@@ -108,11 +108,19 @@
 
         const data = Object.fromEntries(new FormData(form).entries());
 
-        await fetch('https://myaieditor.com/api/form-notify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        }).catch(err => console.error('Form post failed:', err));
+        // Fire in parallel: notification endpoint (email + Google Sheet) AND the CRM (SuiteDash)
+        await Promise.allSettled([
+          fetch('https://myaieditor.com/api/form-notify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          }),
+          fetch('/api/lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          })
+        ]);
 
         // GTM dataLayer push
         window.dataLayer = window.dataLayer || [];
@@ -147,11 +155,18 @@
       data.form_type = 'newsletter';
 
       try {
-        await fetch('https://myaieditor.com/api/form-notify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
+        await Promise.allSettled([
+          fetch('https://myaieditor.com/api/form-notify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          }),
+          fetch('/api/lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          })
+        ]);
       } catch (err) { console.error(err); }
 
       btn.textContent = 'Thank you!';

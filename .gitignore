@@ -4,6 +4,10 @@
 *.key
 generate_images.py
 
+# Build/migration scripts (may contain API keys) — never deploy
+_*.py
+_posts_data.py
+
 # OS
 .DS_Store
 Thumbs.db

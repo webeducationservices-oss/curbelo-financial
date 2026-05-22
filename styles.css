@@ -1495,11 +1495,12 @@ main { min-height: 60vh; }
 }
 .post-embed.audio {
   aspect-ratio: auto;
-  height: 232px;
+  height: auto;
   box-shadow: none;
   background: transparent;
+  border-radius: 0;
 }
-.post-embed.audio iframe { position: static; height: 232px; }
+.post-embed.audio iframe { position: static; height: 150px; display: block; }
 .post-listen-note {
   display: flex;
   align-items: center;

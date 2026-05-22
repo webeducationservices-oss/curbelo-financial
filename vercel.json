@@ -5,41 +5,502 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "ALLOWALL" },
-        { "key": "Content-Security-Policy", "value": "frame-ancestors https://myaieditor.com https://myaiediter.com https://*.vercel.app http://localhost:3000 http://localhost:*" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Frame-Options",
+          "value": "ALLOWALL"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors https://myaieditor.com https://myaiediter.com https://*.vercel.app http://localhost:3000 http://localhost:*"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     },
     {
       "source": "/fonts/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/images/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/styles.css",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, must-revalidate"
+        }
       ]
     }
   ],
   "redirects": [
-    { "source": "/meet-your-curbelo-coach", "destination": "/about/", "permanent": true },
-    { "source": "/meet-your-curbelo-coach/", "destination": "/about/", "permanent": true },
-    { "source": "/learn-more", "destination": "/how-we-help/", "permanent": true },
-    { "source": "/learn-more/", "destination": "/how-we-help/", "permanent": true },
-    { "source": "/resources/the-dog-days-of-summer", "destination": "/blog/dog-days-of-summer/", "permanent": true },
-    { "source": "/resources/the-dog-days-of-summer/", "destination": "/blog/dog-days-of-summer/", "permanent": true },
-    { "source": "/resources/holiday-spending-and-being-financially-responsible-66gma", "destination": "/blog/goal-vs-why/", "permanent": true },
-    { "source": "/resources/holiday-spending-and-being-financially-responsible-66gma/", "destination": "/blog/goal-vs-why/", "permanent": true },
-    { "source": "/resources/holiday-spending-and-being-financially-responsible", "destination": "/blog/holiday-spending/", "permanent": true },
-    { "source": "/resources/holiday-spending-and-being-financially-responsible/", "destination": "/blog/holiday-spending/", "permanent": true }
+    {
+      "source": "/meet-your-curbelo-coach",
+      "destination": "/about/",
+      "permanent": true
+    },
+    {
+      "source": "/meet-your-curbelo-coach/",
+      "destination": "/about/",
+      "permanent": true
+    },
+    {
+      "source": "/learn-more",
+      "destination": "/how-we-help/",
+      "permanent": true
+    },
+    {
+      "source": "/learn-more/",
+      "destination": "/how-we-help/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/the-dog-days-of-summer",
+      "destination": "/blog/dog-days-of-summer/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/the-dog-days-of-summer/",
+      "destination": "/blog/dog-days-of-summer/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/holiday-spending-and-being-financially-responsible-66gma",
+      "destination": "/blog/goal-vs-why/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/holiday-spending-and-being-financially-responsible-66gma/",
+      "destination": "/blog/goal-vs-why/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/holiday-spending-and-being-financially-responsible",
+      "destination": "/blog/holiday-spending/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/holiday-spending-and-being-financially-responsible/",
+      "destination": "/blog/holiday-spending/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t-9n23j-kgre6-4r39t-73b3c",
+      "destination": "/blog/financial-advice-your-rich-uncle-episode-513/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t-9n23j-kgre6-4r39t-73b3c/",
+      "destination": "/blog/financial-advice-your-rich-uncle-episode-513/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t-9n23j-kgre6-4r39t",
+      "destination": "/blog/how-to-pay-off-debt-faster-episode-509/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t-9n23j-kgre6-4r39t/",
+      "destination": "/blog/how-to-pay-off-debt-faster-episode-509/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t-9n23j-kgre6",
+      "destination": "/blog/tiktoks-about-getting-out-of-debt-episode-465/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t-9n23j-kgre6/",
+      "destination": "/blog/tiktoks-about-getting-out-of-debt-episode-465/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t-9n23j",
+      "destination": "/blog/soft-savings-rethinking-retirement-episode-463/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t-9n23j/",
+      "destination": "/blog/soft-savings-rethinking-retirement-episode-463/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t",
+      "destination": "/blog/how-to-haggle-without-looking-like-a-jerk-episode-464/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442-r6z8t/",
+      "destination": "/blog/how-to-haggle-without-looking-like-a-jerk-episode-464/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442",
+      "destination": "/blog/crushing-debt-guide-to-holiday-giving-episode-442/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/crushing-debt-guide-to-holiday-giving-episode-442/",
+      "destination": "/blog/crushing-debt-guide-to-holiday-giving-episode-442/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/a-hrefhttpsyesnerlawpodcastlibsyncomtaming-the-high-cost-of-college-episode-390taming-the-high-cost-of-collegea-gyw5x",
+      "destination": "/blog/meet-henry-and-his-friends/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/a-hrefhttpsyesnerlawpodcastlibsyncomtaming-the-high-cost-of-college-episode-390taming-the-high-cost-of-collegea-gyw5x/",
+      "destination": "/blog/meet-henry-and-his-friends/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/a-hrefhttpsyesnerlawpodcastlibsyncomtaming-the-high-cost-of-college-episode-390taming-the-high-cost-of-collegea",
+      "destination": "/blog/taming-the-high-cost-of-college/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/a-hrefhttpsyesnerlawpodcastlibsyncomtaming-the-high-cost-of-college-episode-390taming-the-high-cost-of-collegea/",
+      "destination": "/blog/taming-the-high-cost-of-college/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/a-hrefhttpsyesnerlawpodcastlibsyncomwhen-is-the-right-time-to-start-a-business-episode-389when-is-the-right-time-to-start-a-businessa",
+      "destination": "/blog/when-is-the-right-time-to-start-a-business/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/a-hrefhttpsyesnerlawpodcastlibsyncomwhen-is-the-right-time-to-start-a-business-episode-389when-is-the-right-time-to-start-a-businessa/",
+      "destination": "/blog/when-is-the-right-time-to-start-a-business/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/need-v-want",
+      "destination": "/blog/need-vs-want/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/need-v-want/",
+      "destination": "/blog/need-vs-want/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/hiding-your-credit-card-debt",
+      "destination": "/blog/hiding-your-credit-card-debt/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/hiding-your-credit-card-debt/",
+      "destination": "/blog/hiding-your-credit-card-debt/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/cancelling-student-debt",
+      "destination": "/blog/cancelling-student-debt/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/cancelling-student-debt/",
+      "destination": "/blog/cancelling-student-debt/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/heroes-home-advantage",
+      "destination": "/blog/heroes-home-advantage/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/heroes-home-advantage/",
+      "destination": "/blog/heroes-home-advantage/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/what-are-the-14-steps-to-financial-freedom",
+      "destination": "/blog/14-steps-to-financial-freedom/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/what-are-the-14-steps-to-financial-freedom/",
+      "destination": "/blog/14-steps-to-financial-freedom/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/why-did-i-receive-a-letter-from-freddie-mac",
+      "destination": "/blog/why-did-i-receive-a-letter-from-freddie-mac/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/why-did-i-receive-a-letter-from-freddie-mac/",
+      "destination": "/blog/why-did-i-receive-a-letter-from-freddie-mac/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/no-spend-challenge",
+      "destination": "/blog/no-spend-challenge/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/no-spend-challenge/",
+      "destination": "/blog/no-spend-challenge/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/blog-budgetmadeeasy",
+      "destination": "/blog/the-budget-that-finally-sticks/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/blog-budgetmadeeasy/",
+      "destination": "/blog/the-budget-that-finally-sticks/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/blog-stressfinances",
+      "destination": "/blog/one-emergency-away-from-falling-apart/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/blog-stressfinances/",
+      "destination": "/blog/one-emergency-away-from-falling-apart/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/moneystressblog",
+      "destination": "/blog/why-making-more-money-hasnt-fixed-your-stress/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/moneystressblog/",
+      "destination": "/blog/why-making-more-money-hasnt-fixed-your-stress/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/henry-notrichyet",
+      "destination": "/blog/are-you-a-henry-still-not-rich/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/henry-notrichyet/",
+      "destination": "/blog/are-you-a-henry-still-not-rich/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/introduction-navigating-the-financial-maze-of-college-education",
+      "destination": "/blog/college-expense-guide-for-parents-and-students/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/introduction-navigating-the-financial-maze-of-college-education/",
+      "destination": "/blog/college-expense-guide-for-parents-and-students/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/eating-healthy-on-a-budget",
+      "destination": "/blog/eating-healthy-on-a-budget/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/eating-healthy-on-a-budget/",
+      "destination": "/blog/eating-healthy-on-a-budget/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/master-your-budget-simple-steps-to-financial-freedom",
+      "destination": "/blog/master-your-budget-simple-steps/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/master-your-budget-simple-steps-to-financial-freedom/",
+      "destination": "/blog/master-your-budget-simple-steps/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/financial-coaching-the-key-to-unlocking-your-financial-potential",
+      "destination": "/blog/financial-coaching-key-to-your-potential/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/financial-coaching-the-key-to-unlocking-your-financial-potential/",
+      "destination": "/blog/financial-coaching-key-to-your-potential/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/the-psychology-of-saving-rewiring-your-brain-for-financial-success",
+      "destination": "/blog/psychology-of-saving-rewiring-your-brain/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/the-psychology-of-saving-rewiring-your-brain-for-financial-success/",
+      "destination": "/blog/psychology-of-saving-rewiring-your-brain/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/impact-of-inflation",
+      "destination": "/blog/impact-of-inflation-and-interest-rates/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/impact-of-inflation/",
+      "destination": "/blog/impact-of-inflation-and-interest-rates/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/ynab-for-couples-the-magic-of-shared-budgeting",
+      "destination": "/blog/ynab-for-couples-shared-budgeting/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/ynab-for-couples-the-magic-of-shared-budgeting/",
+      "destination": "/blog/ynab-for-couples-shared-budgeting/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/transform-your-finances-embrace-a-positive-mindset-for-effective-budgeting",
+      "destination": "/blog/positive-mindset-for-effective-budgeting/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/transform-your-finances-embrace-a-positive-mindset-for-effective-budgeting/",
+      "destination": "/blog/positive-mindset-for-effective-budgeting/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/embracing-financial-freedom-a-journey-with-curbelo-financial-coaching",
+      "destination": "/blog/embracing-financial-freedom-journey/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/embracing-financial-freedom-a-journey-with-curbelo-financial-coaching/",
+      "destination": "/blog/embracing-financial-freedom-journey/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/unraveling-the-mysteries-of-financial-psychology",
+      "destination": "/blog/unraveling-financial-psychology/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/unraveling-the-mysteries-of-financial-psychology/",
+      "destination": "/blog/unraveling-financial-psychology/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/7-steps-to-financial-bliss",
+      "destination": "/blog/7-steps-to-financial-bliss/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/7-steps-to-financial-bliss/",
+      "destination": "/blog/7-steps-to-financial-bliss/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/the-path-to-higher-education-a-guide-to-saving-for-college",
+      "destination": "/blog/guide-to-saving-for-college/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/the-path-to-higher-education-a-guide-to-saving-for-college/",
+      "destination": "/blog/guide-to-saving-for-college/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/why-you-should-start-involving-your-kids-in-the-family-budget",
+      "destination": "/blog/empowering-your-kids-with-money-skills/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/why-you-should-start-involving-your-kids-in-the-family-budget/",
+      "destination": "/blog/empowering-your-kids-with-money-skills/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/last-minute-holiday-budgeting-tips",
+      "destination": "/blog/last-minute-holiday-budgeting-tips/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/last-minute-holiday-budgeting-tips/",
+      "destination": "/blog/last-minute-holiday-budgeting-tips/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/5-expert-approved-ways-to-control-your-business-cash-flow",
+      "destination": "/blog/5-ways-to-control-business-cash-flow/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/5-expert-approved-ways-to-control-your-business-cash-flow/",
+      "destination": "/blog/5-ways-to-control-business-cash-flow/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/summer-budget-hows-it-going",
+      "destination": "/blog/summer-budget-hows-it-going/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/summer-budget-hows-it-going/",
+      "destination": "/blog/summer-budget-hows-it-going/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/halfway-point-what-are-your-goals",
+      "destination": "/blog/halfway-point-what-are-your-goals/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/halfway-point-what-are-your-goals/",
+      "destination": "/blog/halfway-point-what-are-your-goals/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/what-is-a-financial-coach",
+      "destination": "/blog/what-is-a-financial-coach/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/what-is-a-financial-coach/",
+      "destination": "/blog/what-is-a-financial-coach/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/why-i-wont-panic-when-an-emergency-happens",
+      "destination": "/blog/why-i-wont-panic-when-an-emergency-happens/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/why-i-wont-panic-when-an-emergency-happens/",
+      "destination": "/blog/why-i-wont-panic-when-an-emergency-happens/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/the-power-of-budgeting-fueling-your-journey-to-financial-independence",
+      "destination": "/blog/the-power-of-budgeting/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/the-power-of-budgeting-fueling-your-journey-to-financial-independence/",
+      "destination": "/blog/the-power-of-budgeting/",
+      "permanent": true
+    }
   ]
 }

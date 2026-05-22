@@ -899,10 +899,12 @@ main { min-height: 60vh; }
 /* ── PRICING / PLAN CARDS ───────────────────────────────── */
 .plan-grid {
   display: grid;
-  gap: 1.5rem;
+  gap: 2rem;
   grid-template-columns: 1fr;
 }
-@media (min-width: 768px) { .plan-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 768px) {
+  .plan-grid { grid-template-columns: repeat(2, 1fr); max-width: 920px; margin-inline: auto; }
+}
 
 .plan-card {
   position: relative;

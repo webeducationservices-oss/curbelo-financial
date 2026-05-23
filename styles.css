@@ -267,6 +267,9 @@ main { min-height: 60vh; }
   background: #fff;
   border-bottom: 1px solid transparent;
   transition: box-shadow var(--t-base), border-color var(--t-base);
+  /* own GPU layer so the sticky nav always paints ABOVE scrolling content
+     (fixes mobile compositing bug where the announce bar painted over it) */
+  transform: translateZ(0);
 }
 .nav.scrolled {
   box-shadow: var(--shadow-md);

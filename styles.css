@@ -267,9 +267,6 @@ main { min-height: 60vh; }
   background: #fff;
   border-bottom: 1px solid transparent;
   transition: box-shadow var(--t-base), border-color var(--t-base);
-  /* own GPU layer so the sticky nav always paints ABOVE scrolling content
-     (fixes mobile compositing bug where the announce bar painted over it) */
-  transform: translateZ(0);
 }
 .nav.scrolled {
   box-shadow: var(--shadow-md);
@@ -349,6 +346,9 @@ main { min-height: 60vh; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 @media (max-width: 960px) {
+  /* Non-sticky header on mobile — eliminates mobile sticky/compositing artifacts
+     (ghost row, announce painting over the menu). Header scrolls away with the page. */
+  .nav { position: static; }
   .nav-toggle { display: flex; }
   .nav-links {
     position: fixed;

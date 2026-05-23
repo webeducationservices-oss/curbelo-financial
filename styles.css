@@ -140,7 +140,8 @@ body {
   background: var(--bg-page);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* clip (not hidden) prevents horizontal scroll WITHOUT breaking position:sticky on the nav */
+  overflow-x: clip;
 }
 img, svg, video { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }

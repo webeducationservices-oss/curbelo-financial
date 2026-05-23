@@ -247,8 +247,8 @@ main { min-height: 60vh; }
   font-weight: 500;
   text-align: center;
   padding: 0.625rem 1rem;
-  position: relative;
-  z-index: 1001;
+  position: static;
+  /* no z-index: it scrolls away and must stay BELOW the sticky nav (z-index:1000) */
 }
 .announce a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .announce strong { font-weight: 700; }

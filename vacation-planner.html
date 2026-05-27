@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Custom Budget Builder | Curbelo Financial Coaching</title>
-  <meta name="description" content="Answer a few quick questions and get a free personalized budget spreadsheet, built around your income, expenses, and goals — emailed straight to you.">
-  <link rel="canonical" href="https://www.curbelofinancialcoaching.com/budget-builder/">
+  <title>Vacation Planner | Curbelo Financial Coaching</title>
+  <meta name="description" content="Plan a trip you'll actually enjoy — no January credit-card regret. Answer a few questions and get a free personalized vacation savings plan emailed to you.">
+  <link rel="canonical" href="https://www.curbelofinancialcoaching.com/vacation-planner/">
 
-  <meta property="og:title" content="Custom Budget Builder — Curbelo Financial Coaching">
-  <meta property="og:description" content="Answer a few quick questions and get a free personalized budget spreadsheet emailed to you.">
+  <meta property="og:title" content="Vacation Planner — Curbelo Financial Coaching">
+  <meta property="og:description" content="Get a free personalized vacation savings plan — so you can travel cash, with no debt hangover.">
   <meta property="og:image" content="https://www.curbelofinancialcoaching.com/images/og-image.jpg">
-  <meta property="og:url" content="https://www.curbelofinancialcoaching.com/budget-builder/">
+  <meta property="og:url" content="https://www.curbelofinancialcoaching.com/vacation-planner/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Curbelo Financial Coaching">
   <meta name="twitter:card" content="summary_large_image">
@@ -40,7 +40,7 @@
   <!-- End Google Tag Manager -->
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.curbelofinancialcoaching.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.curbelofinancialcoaching.com/toolkit/"},{"@type":"ListItem","position":3,"name":"Budget Builder","item":"https://www.curbelofinancialcoaching.com/budget-builder/"}]}
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.curbelofinancialcoaching.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.curbelofinancialcoaching.com/toolkit/"},{"@type":"ListItem","position":3,"name":"Vacation Planner","item":"https://www.curbelofinancialcoaching.com/vacation-planner/"}]}
   </script>
 
   <script src="/components.js" defer></script>
@@ -80,8 +80,8 @@
     <section class="page-hero">
       <div class="container">
         <span class="section-label">Free Tool</span>
-        <h1>Build your custom budget</h1>
-        <p>Answer a few quick questions and we'll create a personalized budget spreadsheet — tailored to your income, expenses, and goals — and email it straight to you. Free, in about a minute.</p>
+        <h1>Plan your getaway — pay cash, no regret</h1>
+        <p>Tell us about the trip you're dreaming of and we'll build you a free, personalized savings plan — how much to set aside each month so you travel debt-free. Emailed to you in about a minute.</p>
       </div>
     </section>
 
@@ -89,9 +89,9 @@
       <div class="container" style="max-width:760px;">
 
         <div class="contact-form-wrap">
-          <form class="form" action="https://www.curbelofinancialcoaching.com/api/budget-builder/" method="POST" data-budget-form>
+          <form class="form" action="https://www.curbelofinancialcoaching.com/api/vacation-planner/" method="POST" data-vacation-form>
             <div class="form-fields">
-              <input type="hidden" name="form_type" value="budget-tool">
+              <input type="hidden" name="form_type" value="vacation-planner">
               <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
               <input type="hidden" name="recaptcha_token" id="recaptcha_token">
 
@@ -100,121 +100,108 @@
               <p style="font-size:0.9375rem; color:var(--text-secondary); margin-bottom:1.25rem;">Required fields are marked <span style="color:var(--green-600);">*</span></p>
               <div class="form-row">
                 <div class="form-group">
-                  <label for="b-first">First name <span class="req">*</span></label>
-                  <input type="text" id="b-first" name="first_name" required autocomplete="given-name">
+                  <label for="v-first">First name <span class="req">*</span></label>
+                  <input type="text" id="v-first" name="first_name" required autocomplete="given-name">
                 </div>
                 <div class="form-group">
-                  <label for="b-last">Last name <span class="req">*</span></label>
-                  <input type="text" id="b-last" name="last_name" required autocomplete="family-name">
+                  <label for="v-last">Last name <span class="req">*</span></label>
+                  <input type="text" id="v-last" name="last_name" required autocomplete="family-name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="v-email">Email <span class="req">*</span> <span style="font-weight:400;color:var(--text-muted);">(we send your plan here)</span></label>
+                <input type="email" id="v-email" name="email" required autocomplete="email">
+              </div>
+
+              <!-- The trip -->
+              <h2 style="font-size:1.25rem; margin:2rem 0 1.25rem; padding-top:1.5rem; border-top:1px solid var(--border);">The trip you're dreaming of</h2>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="v-dest">Where do you want to go?</label>
+                  <input type="text" id="v-dest" name="destination" placeholder="e.g., Disney World, Cancún, a road trip…">
+                </div>
+                <div class="form-group">
+                  <label for="v-type">What kind of trip?</label>
+                  <select id="v-type" name="trip_type">
+                    <option>Beach getaway</option>
+                    <option>Theme park / family</option>
+                    <option>Road trip</option>
+                    <option>International adventure</option>
+                    <option>City break</option>
+                    <option>Cruise</option>
+                    <option>Other</option>
+                  </select>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <label for="b-email">Email <span class="req">*</span> <span style="font-weight:400;color:var(--text-muted);">(we send your spreadsheet here)</span></label>
-                  <input type="email" id="b-email" name="email" required autocomplete="email">
-                </div>
-                <div class="form-group">
-                  <label for="b-household">Household size</label>
-                  <select id="b-household" name="household_size">
+                  <label for="v-travelers">Who's going?</label>
+                  <select id="v-travelers" name="travelers">
                     <option>Just me</option>
-                    <option>2 people</option>
-                    <option>3 people</option>
-                    <option>4 people</option>
-                    <option>5+ people</option>
+                    <option>2 of us</option>
+                    <option>3–4 of us</option>
+                    <option>5+ of us</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="v-when">When do you want to go?</label>
+                  <select id="v-when" name="timeframe">
+                    <option>Within 3 months</option>
+                    <option>3–6 months</option>
+                    <option>6–12 months</option>
+                    <option>Just dreaming for now</option>
                   </select>
                 </div>
               </div>
               <div class="form-group">
-                <label for="b-with">Are you budgeting…</label>
-                <select id="b-with" name="budgeting_with">
-                  <option>On my own</option>
-                  <option>With a partner / spouse</option>
-                </select>
+                <label for="v-nights">How many nights?</label>
+                <input type="number" id="v-nights" name="nights" min="0" step="1" inputmode="numeric" placeholder="e.g., 5">
               </div>
 
-              <!-- Income -->
-              <h2 style="font-size:1.25rem; margin:2rem 0 1.25rem; padding-top:1.5rem; border-top:1px solid var(--border);">Your income</h2>
+              <!-- Costs -->
+              <h2 style="font-size:1.25rem; margin:2rem 0 0.25rem; padding-top:1.5rem; border-top:1px solid var(--border);">What it might cost</h2>
+              <p style="font-size:0.9375rem; color:var(--text-secondary); margin-bottom:1.25rem;">Just your best guess — leave blank and we'll estimate it for you.</p>
               <div class="form-row">
                 <div class="form-group">
-                  <label for="b-income">Monthly take-home income (after taxes) <span class="req">*</span></label>
-                  <input type="number" id="b-income" name="monthly_income" min="0" step="50" inputmode="numeric" placeholder="$" required>
+                  <label for="v-travel">Getting there (flights, gas)</label>
+                  <input type="number" id="v-travel" name="travel_cost" min="0" step="25" inputmode="numeric" placeholder="$">
                 </div>
                 <div class="form-group">
-                  <label for="b-freq">How are you paid?</label>
-                  <select id="b-freq" name="pay_frequency">
-                    <option>Monthly</option>
-                    <option>Twice a month</option>
-                    <option>Every 2 weeks</option>
-                    <option>Weekly</option>
-                    <option>Irregular / varies</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Expenses -->
-              <h2 style="font-size:1.25rem; margin:2rem 0 0.25rem; padding-top:1.5rem; border-top:1px solid var(--border);">Your monthly expenses</h2>
-              <p style="font-size:0.9375rem; color:var(--text-secondary); margin-bottom:1.25rem;">Estimates are fine — round numbers work great. Leave blank if it doesn't apply.</p>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="b-housing">Housing (rent / mortgage)</label>
-                  <input type="number" id="b-housing" name="housing" min="0" step="25" inputmode="numeric" placeholder="$">
-                </div>
-                <div class="form-group">
-                  <label for="b-utilities">Utilities (power, water, etc.)</label>
-                  <input type="number" id="b-utilities" name="utilities" min="0" step="10" inputmode="numeric" placeholder="$">
+                  <label for="v-lodging">Where you'll stay (hotel, rental)</label>
+                  <input type="number" id="v-lodging" name="lodging_cost" min="0" step="25" inputmode="numeric" placeholder="$">
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <label for="b-transport">Transportation (car, gas, insurance)</label>
-                  <input type="number" id="b-transport" name="transportation" min="0" step="10" inputmode="numeric" placeholder="$">
+                  <label for="v-foodfun">Food &amp; fun (eating, activities)</label>
+                  <input type="number" id="v-foodfun" name="food_fun_cost" min="0" step="25" inputmode="numeric" placeholder="$">
                 </div>
                 <div class="form-group">
-                  <label for="b-food">Food (groceries + dining out)</label>
-                  <input type="number" id="b-food" name="food" min="0" step="10" inputmode="numeric" placeholder="$">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="b-debt">Debt payments (cards, loans)</label>
-                  <input type="number" id="b-debt" name="debt_payments" min="0" step="10" inputmode="numeric" placeholder="$">
-                </div>
-                <div class="form-group">
-                  <label for="b-subs">Phone, internet &amp; subscriptions</label>
-                  <input type="number" id="b-subs" name="subscriptions" min="0" step="5" inputmode="numeric" placeholder="$">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="b-other">Everything else (personal, fun, misc.)</label>
-                  <input type="number" id="b-other" name="other_expenses" min="0" step="10" inputmode="numeric" placeholder="$">
-                </div>
-                <div class="form-group">
-                  <label for="b-savings">How much do you save each month now?</label>
-                  <input type="number" id="b-savings" name="current_savings_monthly" min="0" step="10" inputmode="numeric" placeholder="$">
+                  <label for="v-extras">Extras (souvenirs, parking, tips)</label>
+                  <input type="number" id="v-extras" name="extras_cost" min="0" step="10" inputmode="numeric" placeholder="$">
                 </div>
               </div>
 
-              <!-- Goals -->
-              <h2 style="font-size:1.25rem; margin:2rem 0 1.25rem; padding-top:1.5rem; border-top:1px solid var(--border);">Your goals</h2>
-              <div class="form-group">
-                <label for="b-goal">What's your #1 money goal right now?</label>
-                <select id="b-goal" name="top_goal">
-                  <option>Pay off debt</option>
-                  <option>Build an emergency fund</option>
-                  <option>Save for a big purchase</option>
-                  <option>Save / invest for the future</option>
-                  <option>Just get organized and in control</option>
-                </select>
+              <!-- Savings -->
+              <h2 style="font-size:1.25rem; margin:2rem 0 1.25rem; padding-top:1.5rem; border-top:1px solid var(--border);">Your savings</h2>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="v-saved">Saved for this trip so far</label>
+                  <input type="number" id="v-saved" name="already_saved" min="0" step="25" inputmode="numeric" placeholder="$">
+                </div>
+                <div class="form-group">
+                  <label for="v-monthly">How much can you set aside each month?</label>
+                  <input type="number" id="v-monthly" name="monthly_save" min="0" step="10" inputmode="numeric" placeholder="$">
+                </div>
               </div>
               <div class="form-group">
-                <label for="b-challenge">What's your biggest money challenge? (optional)</label>
-                <textarea id="b-challenge" name="challenge" rows="3" placeholder="e.g., We never know where the money goes by the end of the month…"></textarea>
+                <label for="v-must">The one thing you don't want to skimp on? (optional)</label>
+                <textarea id="v-must" name="must_have" rows="2" placeholder="e.g., a nice hotel on the beach, a special dinner out…"></textarea>
               </div>
 
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary btn-lg btn-arrow" style="width:100%;">Build my budget spreadsheet</button>
-                <p style="font-size:0.8125rem; color:var(--text-muted); text-align:center; margin-top:0.875rem;">We'll email your custom spreadsheet in about a minute. Your info is private and never sold.</p>
+                <button type="submit" class="btn btn-primary btn-lg btn-arrow" style="width:100%;">Build my savings plan</button>
+                <p style="font-size:0.8125rem; color:var(--text-muted); text-align:center; margin-top:0.875rem;">We'll email your custom plan in about a minute. Your info is private and never sold.</p>
               </div>
             </div>
 
@@ -222,9 +209,9 @@
               <div class="success-icon">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
-              <h3>Your budget is on its way!</h3>
-              <p>We're building your personalized budget spreadsheet right now and emailing it to you. It should land in your inbox within a few minutes — be sure to check your spam folder just in case.</p>
-              <a href="/how-we-help/" class="tel-link">Want help putting it into action? See our coaching →</a>
+              <h3>Your plan is on its way! ✈️</h3>
+              <p>We're building your personalized vacation savings plan right now and emailing it to you. It should land in your inbox within a few minutes — be sure to check your spam folder just in case.</p>
+              <a href="/how-we-help/" class="tel-link">Want help reaching your goal faster? See our coaching →</a>
             </div>
           </form>
         </div>
@@ -234,16 +221,16 @@
           <h2 class="text-center" style="font-size:1.5rem; margin-bottom:1.5rem;">How it works</h2>
           <div class="steps" style="grid-template-columns:repeat(3,1fr);">
             <div class="step" style="background:var(--slate-50); border:1px solid var(--border); backdrop-filter:none;">
-              <h3 style="color:var(--slate-900);">Answer a few questions</h3>
-              <p style="color:var(--text-secondary);">Tell us your income, rough expenses, and what you're working toward.</p>
+              <h3 style="color:var(--slate-900);">Tell us about the trip</h3>
+              <p style="color:var(--text-secondary);">Where, when, who's going, and a rough idea of the costs.</p>
             </div>
             <div class="step" style="background:var(--slate-50); border:1px solid var(--border); backdrop-filter:none;">
-              <h3 style="color:var(--slate-900);">We build your spreadsheet</h3>
-              <p style="color:var(--text-secondary);">A personalized monthly budget — categories, targets, and coach notes — made just for you.</p>
+              <h3 style="color:var(--slate-900);">We build your plan</h3>
+              <p style="color:var(--text-secondary);">A monthly savings target and budget breakdown so you can pay cash.</p>
             </div>
             <div class="step" style="background:var(--slate-50); border:1px solid var(--border); backdrop-filter:none;">
               <h3 style="color:var(--slate-900);">Check your inbox</h3>
-              <p style="color:var(--text-secondary);">Your spreadsheet arrives by email, ready to download and start using today.</p>
+              <p style="color:var(--text-secondary);">Your plan arrives by email, ready to follow and start saving today.</p>
             </div>
           </div>
         </div>
@@ -304,7 +291,7 @@
 
   <script>
   (function () {
-    var form = document.querySelector('form[data-budget-form]');
+    var form = document.querySelector('form[data-vacation-form]');
     if (!form) return;
     var KEY = '6Lck8aQsAAAAALMA-T6nwfkSf7bv4K-mOhkszeKh';
     form.addEventListener('submit', async function (e) {
@@ -313,32 +300,32 @@
       if (honey && honey.value) return;
       var btn = form.querySelector('[type="submit"]');
       var orig = btn.textContent;
-      var err = form.querySelector('.budget-error');
+      var err = form.querySelector('.tool-error');
       if (err) err.remove();
       btn.disabled = true;
-      btn.textContent = 'Building your budget… (~1 min)';
+      btn.textContent = 'Building your plan… (~1 min)';
 
       try {
         if (typeof grecaptcha !== 'undefined' && grecaptcha.execute) {
           await new Promise(function (r) { grecaptcha.ready(r); });
-          var token = await grecaptcha.execute(KEY, { action: 'budget_builder' });
+          var token = await grecaptcha.execute(KEY, { action: 'vacation_planner' });
           var tf = form.querySelector('#recaptcha_token'); if (tf) tf.value = token;
         }
       } catch (e2) { console.warn('reCAPTCHA error:', e2); }
 
       var data = Object.fromEntries(new FormData(form).entries());
 
-      // CRM lead is pushed server-side by /api/budget-builder (tagged "Budget Builder").
+      // CRM lead is pushed server-side by /api/vacation-planner (tagged "Vacation Planner").
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'form_submission', form_type: 'budget-tool', form_location: '/budget-builder/' });
+      window.dataLayer.push({ event: 'form_submission', form_type: 'vacation-planner', form_location: '/vacation-planner/' });
 
       var ok = false;
       try {
-        var res = await fetch('/api/budget-builder/', { method: 'POST',
+        var res = await fetch('/api/vacation-planner/', { method: 'POST',
           headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
         var j = await res.json().catch(function () { return {}; });
         ok = res.ok && j.success !== false;
-      } catch (e4) { console.error('budget-builder error:', e4); }
+      } catch (e4) { console.error('vacation-planner error:', e4); }
 
       if (ok) {
         form.querySelector('.form-fields').style.display = 'none';
@@ -347,9 +334,9 @@
         btn.disabled = false;
         btn.textContent = orig;
         var p = document.createElement('p');
-        p.className = 'budget-error';
+        p.className = 'tool-error';
         p.style.cssText = 'margin-top:1rem;text-align:center;color:#b91c1c;font-size:0.9375rem;';
-        p.innerHTML = 'Sorry — something went wrong building your budget. Please try again, or <a href="/contact/" style="color:var(--blue-600);font-weight:600;">contact us</a> and we\'ll send it manually.';
+        p.innerHTML = 'Sorry — something went wrong building your plan. Please try again, or <a href="/contact/" style="color:var(--blue-600);font-weight:600;">contact us</a> and we\'ll send it manually.';
         form.querySelector('.form-actions').appendChild(p);
       }
     });

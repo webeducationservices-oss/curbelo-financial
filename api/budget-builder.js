@@ -7,6 +7,7 @@ const CLAUDE_MODEL = "claude-sonnet-4-20250514";
 const FROM = "Curbelo Financial Coaching <budget@sitenotifications.org>";
 const COACH_EMAIL = "gcfinancialcoach21@gmail.com";
 const ADMIN_EMAIL = "justin@webeducationservices.com";
+const { pushLead, tagsFor } = require("./_crm.js");
 
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -46,6 +47,23 @@ module.exports = async (req, res) => {
       }
     } catch (e) { console.warn("[budget] recaptcha verify failed (continuing):", String(e)); }
   }
+
+  // Push the lead into the CRM (server-side, tagged) — capture it regardless of
+  // whether the budget generation/email below succeeds. Never throws.
+  await pushLead({
+    first_name: first, last_name: last, email,
+    tags: tagsFor("budget-tool"),
+    notes: [
+      "Tool: Budget Builder",
+      "Monthly take-home income: $" + income,
+      body.household_size ? "Household: " + body.household_size : "",
+      body.budgeting_with ? "Budgeting: " + body.budgeting_with : "",
+      body.top_goal ? "Top goal: " + body.top_goal : "",
+      body.challenge ? "Challenge: " + String(body.challenge).slice(0, 300) : "",
+      "Source: curbelofinancialcoaching.com (/budget-builder/)",
+      "Submitted: " + new Date().toISOString(),
+    ],
+  });
 
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   const RESEND_API_KEY = process.env.RESEND_API_KEY;

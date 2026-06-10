@@ -1714,6 +1714,13 @@ main { min-height: 60vh; }
   html { scroll-behavior: auto; }
 }
 
+/* ── IMAGE SHARPENING ──────────────────────────────────── */
+.image-sharp, .podcast-cover {
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  filter: contrast(1.05) brightness(1.02);
+}
+
 /* ── UTILITIES ──────────────────────────────────────────── */
 .sr-only {
   position: absolute;

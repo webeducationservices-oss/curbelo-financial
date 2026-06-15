@@ -4,7 +4,7 @@
 // + George + Justin. Also pushes a tagged lead into the CRM (server-side).
 // All secrets come from Vercel env vars; nothing is exposed to the browser.
 
-const CLAUDE_MODEL = "claude-sonnet-4-6"  // Sonnet 4 retired 2026-06-15;
+const CLAUDE_MODEL = "claude-sonnet-4-6"; // Sonnet 4 retired 2026-06-15
 const FROM = "Curbelo Financial Coaching <tools@sitenotifications.org>";
 const COACH_EMAIL = "gcfinancialcoach21@gmail.com";
 const ADMIN_EMAIL = "justin@webeducationservices.com";

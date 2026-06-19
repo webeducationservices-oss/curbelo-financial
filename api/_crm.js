@@ -68,4 +68,48 @@ async function pushLead(opts) {
   }
 }
 
-module.exports = { pushLead, tagsFor, FORM_TYPE_TAGS };
+// Content + domain blocklist for B2B cold-pitch spam that passes reCAPTCHA
+// (a real human in a real browser; we can only catch these by their content).
+// Mirrors the lists in myaieditor's form-notify so the CRM and email gates
+// agree. Keep PHRASES specific enough that a legit client never trips 2+.
+const BLOCKED_EMAIL_DOMAINS = [
+  "getdandynow.com",
+  "getdandy.com",
+  "theprofessionalprofiles.com",
+  "vettedvas.com",
+];
+const BLOCKED_PHRASES = [
+  // GetDandy / AI receptionist
+  "getdandy", "ai implementation advisor", "ai agent for", "answer your phone",
+  "three times your money back", "triple your money back", "i'll give you a full refund",
+  // Wikipedia / vanity profile
+  "wikipedia page", "wiki page", "wiki links", "world's most significant tool",
+  // MAVIS / agentic AI VA
+  "agentic ai", "my advanced virtual intelligent system", "we built mavis",
+  "runs your entire business", "trained human virtual assistant",
+  "all handled in one place", "you focus on scaling", "we handle the execution",
+  "are you looking for any help with your business",
+  // Generic cold-outreach tells
+  "respond with stop", "reply with stop", "respond stop to opt",
+  "just respond back to this email", "getting yourself or your business noticed",
+];
+
+// Returns a short reason string if the submission looks like cold-pitch spam,
+// or null if it's clean. Caller should silent-drop (return success) on hit so
+// the spammer's retry logic stops, and log for review.
+function looksLikeSpam(body) {
+  const email = (body.email || "").toLowerCase();
+  const domain = (email.split("@")[1] || "").trim();
+  if (BLOCKED_EMAIL_DOMAINS.some((d) => domain === d || domain.endsWith("." + d))) {
+    return "domain:" + domain;
+  }
+  const haystack = [
+    body.first_name, body.last_name, body.email, body.interest,
+    body.message, body.company, body.subject,
+  ].filter(Boolean).join(" \n ").toLowerCase();
+  const hits = BLOCKED_PHRASES.filter((p) => haystack.includes(p)).length;
+  if (hits >= 2) return "phrases:" + hits;
+  return null;
+}
+
+module.exports = { pushLead, tagsFor, FORM_TYPE_TAGS, looksLikeSpam };

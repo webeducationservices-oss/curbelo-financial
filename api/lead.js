@@ -3,7 +3,7 @@
 // themselves, server-side). Secrets are read from Vercel env vars
 // (SUITEDASH_PUBLIC_ID / SUITEDASH_SECRET_KEY) and never exposed to the browser.
 
-const { pushLead, tagsFor } = require("./_crm.js");
+const { pushLead, tagsFor, looksLikeSpam } = require("./_crm.js");
 
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -25,6 +25,14 @@ module.exports = async (req, res) => {
   const email = (body.email || "").trim();
   if (!email || (!first && !last)) {
     return res.status(200).json({ success: false, error: "Missing required fields (name + email)" });
+  }
+
+  // Silent-drop cold-pitch spam (e.g., MAVIS / vettedvas.com) — return success
+  // so the spammer thinks it worked, but never reaches the CRM.
+  const spamReason = looksLikeSpam(body);
+  if (spamReason) {
+    console.warn("[lead] dropped spam:", spamReason, "email=", body.email);
+    return res.status(200).json({ success: true, skipped: "spam" });
   }
 
   const formType = (body.form_type || "contact").toLowerCase();

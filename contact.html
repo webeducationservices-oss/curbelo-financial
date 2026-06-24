@@ -66,85 +66,9 @@
   <!-- myaieditor inline-edit loader (no-op for real visitors) -->
   <script src="/mae-edit-loader.js" async></script>
   
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('[data-ajax]');
-    const formFields = form.querySelector('.form-fields');
-    const formSuccess = form.querySelector('.form-success');
-    
-    // Set timestamp on page load
-    document.getElementById('recaptcha_token').value = '';
-    const timestamp = Date.now();
-    
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      // Check honeypot
-      const honey = form.querySelector('[name="_honey"]').value;
-      if (honey) return;
-      
-      // Show loading state
-      const submitBtn = form.querySelector('[type="submit"]');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Sending...';
-      submitBtn.disabled = true;
-      
-      try {
-        // Get reCAPTCHA token
-        await new Promise((resolve, reject) => {
-          grecaptcha.ready(function() {
-            grecaptcha.execute('6Lck8aQsAAAAALMA-T6nwfkSf7bv4K-mOhkszeKh', {action: 'contact'})
-              .then(function(token) {
-                document.getElementById('recaptcha_token').value = token;
-                resolve();
-              })
-              .catch(reject);
-          });
-        });
-        
-        // Add timestamp
-        const tsInput = form.querySelector('[name="_ts"]');
-        if (!tsInput) {
-          const hiddenTs = document.createElement('input');
-          hiddenTs.type = 'hidden';
-          hiddenTs.name = '_ts';
-          hiddenTs.value = timestamp.toString();
-          form.appendChild(hiddenTs);
-        } else {
-          tsInput.value = timestamp.toString();
-        }
-        
-        // Submit form
-        const formData = new FormData(form);
-        const response = await fetch(form.action, {
-          method: 'POST',
-          body: formData
-        });
-        
-        if (response.ok) {
-          // Hide form fields, show success message
-          formFields.style.display = 'none';
-          formSuccess.classList.add('show');
-          
-          // Redirect to Calendly after a short delay
-          setTimeout(() => {
-            window.open('https://calendly.com/gcfinancialcoach21/meetandgreet', '_blank');
-          }, 2000);
-        } else {
-          throw new Error('Form submission failed');
-        }
-        
-      } catch (error) {
-        console.error('Form submission error:', error);
-        alert('There was an error submitting your message. Please try again or call us directly at (727) 316-5747.');
-      } finally {
-        // Reset button
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-      }
-    });
-  });
-  </script>
+  <!-- Form submission is handled by the shared data-ajax handler in components.js
+       (single submit → form-notify + /api/lead CRM, reCAPTCHA, honeypot, _ts, then
+       opens the scheduler via the form's data-success-url). -->
   <script type="application/ld+json">
   {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.curbelofinancialcoaching.com/"}, {"@type": "ListItem", "position": 2, "name": "Contact", "item": "https://www.curbelofinancialcoaching.com/contact/"}]}
   </script>
@@ -254,7 +178,7 @@
           <!-- Contact Form -->
           <div class="fade-in">
             <div class="contact-form-wrap">
-              <form class="form" action="https://myaieditor.com/api/form-notify" method="POST" data-ajax>
+              <form class="form" action="https://myaieditor.com/api/form-notify" method="POST" data-ajax data-success-url="https://calendly.com/gcfinancialcoach21/meetandgreet">
                 <div class="form-fields">
                   <input type="hidden" name="site_slug" value="curbelo-financial">
                   <input type="hidden" name="form_type" value="contact">

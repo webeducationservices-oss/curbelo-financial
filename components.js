@@ -86,6 +86,11 @@
   // ── Form submit (AJAX) ─────────────────────────────────
   const RECAPTCHA_KEY = '6Lck8aQsAAAAALMA-T6nwfkSf7bv4K-mOhkszeKh';
   document.querySelectorAll('form[data-ajax]').forEach(form => {
+    // Stamp a load-time timestamp so form-notify's "too fast" bot check passes
+    // for real users (must be set on load, not at submit).
+    const tsField = form.querySelector('[name="_ts"]');
+    if (tsField && !tsField.value) tsField.value = String(Date.now());
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -139,6 +144,10 @@
       if (fields) fields.style.display = 'none';
       if (success) success.classList.add('show');
       if (btn) { btn.disabled = false; btn.textContent = original; }
+
+      // Optional post-success redirect (e.g. contact form → Calendly scheduler)
+      const successUrl = form.getAttribute('data-success-url');
+      if (successUrl) setTimeout(() => window.open(successUrl, '_blank'), 2000);
     });
   });
 

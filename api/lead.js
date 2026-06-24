@@ -4,6 +4,7 @@
 // (SUITEDASH_PUBLIC_ID / SUITEDASH_SECRET_KEY) and never exposed to the browser.
 
 const { pushLead, tagsFor, looksLikeSpam } = require("./_crm.js");
+const { buildConsentRecord } = require("./_consent.js");
 
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -36,6 +37,7 @@ module.exports = async (req, res) => {
   }
 
   const formType = (body.form_type || "contact").toLowerCase();
+  const tags = tagsFor(formType);
 
   const notes = [];
   if (body.interest) notes.push("Interest: " + body.interest);
@@ -44,12 +46,20 @@ module.exports = async (req, res) => {
   notes.push("Source: curbelofinancialcoaching.com" + (body.form_location ? " (" + body.form_location + ")" : ""));
   notes.push("Submitted: " + new Date().toISOString());
 
+  // SMS opt-in proof (Twilio A2P 10DLC) — only recorded on affirmative consent,
+  // stored separately for informational vs marketing. Never inferred from phone.
+  const consent = buildConsentRecord(body, req);
+  if (consent.hasConsent) {
+    tags.push(...consent.tags);
+    notes.push("", ...consent.notes);
+  }
+
   const result = await pushLead({
     first_name: first,
     last_name: last,
     email,
     phone: body.phone,
-    tags: tagsFor(formType),
+    tags,
     notes,
   });
 

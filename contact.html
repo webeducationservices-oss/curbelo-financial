@@ -261,6 +261,8 @@
                   <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
                   <input type="hidden" name="recaptcha_token" id="recaptcha_token">
                   <input type="hidden" name="_ts" id="form_ts">
+                  <input type="hidden" name="form_name" value="Contact Form">
+                  <input type="hidden" name="sms_consent_version" value="2026-06-24">
 
                   <div style="margin-bottom: 1.5rem;">
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Send a message</h3>
@@ -284,10 +286,24 @@
                       <input type="email" id="f-email" name="email" required autocomplete="email">
                     </div>
                     <div class="form-group">
-                      <label for="f-phone">Phone</label>
+                      <label for="f-phone">Phone <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
                       <input type="tel" id="f-phone" name="phone" autocomplete="tel">
                     </div>
                   </div>
+
+                  <!-- SMS consent (Twilio A2P 10DLC) — optional, unchecked, not required to submit -->
+                  <fieldset class="sms-consent">
+                    <legend class="sms-consent-legend">Text message updates (optional)</legend>
+                    <div class="sms-consent-item">
+                      <input type="checkbox" id="sms-info" name="sms_consent_informational" value="yes">
+                      <label for="sms-info">I agree to receive appointment reminders, account notifications, service updates, and customer service text messages from Curbelo Financial Coaching at the phone number provided. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help. View our <a href="/terms-and-conditions/" target="_blank" rel="noopener">Terms and Conditions</a> and <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</label>
+                    </div>
+                    <div class="sms-consent-item">
+                      <input type="checkbox" id="sms-mkt" name="sms_consent_marketing" value="yes">
+                      <label for="sms-mkt">I agree to receive recurring promotional and marketing text messages from Curbelo Financial Coaching, including special offers, company news, and service promotions. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help. Consent is not a condition of purchase. View our <a href="/terms-and-conditions/" target="_blank" rel="noopener">Terms and Conditions</a> and <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</label>
+                    </div>
+                    <p class="sms-consent-note">These boxes are optional and unchecked by default. You can send your message and work with us without checking either one.</p>
+                  </fieldset>
 
                   <div class="form-group">
                     <label for="f-interest">What are you most interested in?</label>
@@ -379,7 +395,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>&copy; <span data-year>2026</span> Curbelo Financial Coaching. All rights reserved.</span>
+        <span>&copy; <span data-year>2026</span> Curbelo Financial Coaching. All rights reserved. &nbsp;&middot;&nbsp; <a href="/privacy-policy/" style="color:rgba(255,255,255,0.7);">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/terms-and-conditions/" style="color:rgba(255,255,255,0.7);">Terms &amp; Conditions</a></span>
         <span style="font-size:11px;color:rgba(255,255,255,0.4);">Protected by reCAPTCHA. <a href="https://policies.google.com/privacy" style="color:rgba(255,255,255,0.55);">Privacy</a> · <a href="https://policies.google.com/terms" style="color:rgba(255,255,255,0.55);">Terms</a></span>
       </div>
     </div>

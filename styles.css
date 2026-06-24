@@ -1736,3 +1736,13 @@ main { min-height: 60vh; }
 .mb-0 { margin-bottom: 0 !important; }
 
 .grecaptcha-badge { visibility: hidden; }
+
+/* ── SMS consent checkboxes (Twilio A2P 10DLC) ───────────────── */
+.sms-consent { margin: 0.25rem 0 1.25rem; border: 1px solid var(--border); border-radius: var(--radius-md, 12px); background: var(--slate-50, #f8fafc); padding: 1rem 1.1rem; }
+.sms-consent-legend { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-700, #475569); margin-bottom: 0.75rem; }
+.sms-consent-item { display: flex; gap: 0.625rem; align-items: flex-start; margin-bottom: 0.875rem; }
+.sms-consent-item:last-child { margin-bottom: 0; }
+.sms-consent-item input[type="checkbox"] { flex: 0 0 auto; width: 1.15rem; height: 1.15rem; margin: 0.15rem 0 0; accent-color: var(--blue-600, #1a5fb4); cursor: pointer; }
+.sms-consent-item label { font-size: 0.8125rem; line-height: 1.5; color: var(--text-secondary, #475569); font-weight: 400; cursor: pointer; }
+.sms-consent-item a { color: var(--blue-600, #1a5fb4); font-weight: 600; text-decoration: underline; }
+.sms-consent-note { font-size: 0.75rem; color: var(--text-muted, #94a3b8); margin: 0.5rem 0 0; }

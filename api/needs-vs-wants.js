@@ -10,6 +10,7 @@ const FROM = "Curbelo Financial Coaching <tools@sitenotifications.org>";
 const COACH_EMAIL = "gcfinancialcoach21@gmail.com";
 const ADMIN_EMAIL = "justin@webeducationservices.com";
 const { pushLead, tagsFor } = require("./_crm.js");
+const { persistLead } = require("./_leads.js");
 
 // Form field name -> human label. Keep in sync with needs-vs-wants.html.
 const ITEMS = {
@@ -88,6 +89,10 @@ module.exports = async (req, res) => {
       "Submitted: " + new Date().toISOString(),
     ],
   });
+
+  // Also persist to the shared `leads` table (silently — no extra email; George
+  // already gets the result email and the tagged SuiteDash contact).
+  await persistLead("needs-vs-wants", { ...body, form_location: "/needs-vs-wants/" });
 
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   const RESEND_API_KEY = process.env.RESEND_API_KEY;

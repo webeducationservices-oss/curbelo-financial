@@ -27,7 +27,10 @@ function stringify(obj) {
   return out;
 }
 
-async function persistLead(formType, fields) {
+// opts.notify === true sends the normal form-notify email as well. Use it for
+// submissions we would otherwise have dropped (low reCAPTCHA score, blocklist
+// hit) so a human actually sees them and can rescue a false positive.
+async function persistLead(formType, fields, opts) {
   const secret = process.env.INTERNAL_FORM_SECRET;
   if (!secret) {
     console.warn("[leads] INTERNAL_FORM_SECRET not set — skipping leads persistence");
@@ -39,8 +42,8 @@ async function persistLead(formType, fields) {
     // these win over anything in fields
     site_slug: SITE_SLUG,
     form_type: formType,
-    skip_notification: "true",
   };
+  if (!(opts && opts.notify)) payload.skip_notification = "true";
   delete payload._honey;
   delete payload.recaptcha_token;
 

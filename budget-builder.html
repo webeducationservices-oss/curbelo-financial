@@ -318,13 +318,25 @@
       btn.disabled = true;
       btn.textContent = 'Building your budget… (~1 min)';
 
-      try {
-        if (typeof grecaptcha !== 'undefined' && grecaptcha.execute) {
-          await new Promise(function (r) { grecaptcha.ready(r); });
-          var token = await grecaptcha.execute(KEY, { action: 'budget_builder' });
-          var tf = form.querySelector('#recaptcha_token'); if (tf) tf.value = token;
-        }
-      } catch (e2) { console.warn('reCAPTCHA error:', e2); }
+      // reCAPTCHA is never fatal and never hangs: if the script is blocked or
+      // the key is wrong, grecaptcha.execute() can stall forever, so race it
+      // against an 8s timer and post without a token rather than leaving the
+      // visitor on a dead button.
+      var tf = form.querySelector('#recaptcha_token');
+      if (tf) tf.value = await Promise.race([
+        new Promise(function (resolve) {
+          if (typeof grecaptcha === 'undefined' || !grecaptcha.execute) return resolve('');
+          try {
+            grecaptcha.ready(function () {
+              try {
+                grecaptcha.execute(KEY, { action: 'budget_builder' })
+                  .then(resolve, function (e2) { console.warn('reCAPTCHA error:', e2); resolve(''); });
+              } catch (e2) { console.warn('reCAPTCHA error:', e2); resolve(''); }
+            });
+          } catch (e2) { console.warn('reCAPTCHA error:', e2); resolve(''); }
+        }),
+        new Promise(function (resolve) { setTimeout(function () { resolve(''); }, 8000); })
+      ]);
 
       var data = Object.fromEntries(new FormData(form).entries());
 
@@ -349,7 +361,7 @@
         var p = document.createElement('p');
         p.className = 'budget-error';
         p.style.cssText = 'margin-top:1rem;text-align:center;color:#b91c1c;font-size:0.9375rem;';
-        p.innerHTML = 'Sorry — something went wrong building your budget. Please try again, or <a href="/contact/" style="color:var(--blue-600);font-weight:600;">contact us</a> and we\'ll send it manually.';
+        p.innerHTML = 'We could not build your budget just now. Please try again, or call us at <a href="tel:+17273165747" style="color:#b91c1c;font-weight:700;">(727) 316-5747</a> (or email <a href="mailto:info@curbelofinancialcoaching.com" style="color:#b91c1c;font-weight:700;">info@curbelofinancialcoaching.com</a>) and we\'ll send it manually.';
         form.querySelector('.form-actions').appendChild(p);
       }
     });

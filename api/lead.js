@@ -5,6 +5,7 @@
 
 const { pushLead, tagsFor, looksLikeSpam } = require("./_crm.js");
 const { buildConsentRecord } = require("./_consent.js");
+const { persistLead } = require("./_leads.js");
 
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,11 +29,20 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: false, error: "Missing required fields (name + email)" });
   }
 
-  // Silent-drop cold-pitch spam (e.g., MAVIS / vettedvas.com) — return success
-  // so the spammer thinks it worked, but never reaches the CRM.
+  // Cold-pitch spam (e.g., MAVIS / vettedvas.com) never reaches the CRM, and we
+  // still answer success so the spammer's retry logic stops. But it is no longer
+  // a silent discard: the blocklist can false-positive on a real client, so the
+  // submission is persisted (flagged, no notification email) and stays rescuable.
   const spamReason = looksLikeSpam(body);
   if (spamReason) {
-    console.warn("[lead] dropped spam:", spamReason, "email=", body.email);
+    console.warn("[lead] blocked spam:", spamReason, "email=", body.email);
+    await persistLead("blocked-spam-review", {
+      ...body,
+      form_location: body.form_location || "",
+      review_reason: "spam_blocklist",
+      blocked_by: spamReason,
+      original_form_type: body.form_type || "contact",
+    });
     return res.status(200).json({ success: true, skipped: "spam" });
   }
 

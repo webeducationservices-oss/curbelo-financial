@@ -85,6 +85,58 @@
 
   // ── Form submit (AJAX) ─────────────────────────────────
   const RECAPTCHA_KEY = '6Lck8aQsAAAAALMA-T6nwfkSf7bv4K-mOhkszeKh';
+  const PHONE_TEL = 'tel:+17273165747';
+  const PHONE_TEXT = '(727) 316-5747';
+  const CONTACT_EMAIL = 'info@curbelofinancialcoaching.com';
+
+  // reCAPTCHA must never be fatal. If the script is blocked (ad blockers,
+  // privacy extensions) or the key is wrong, grecaptcha.execute() can hang
+  // forever and the visitor is left on a dead button. Race it against an 8s
+  // timer and fall back to posting with no token: form-notify records that as
+  // missing_recaptcha_token, so the lead stays rescuable from the Spam tab
+  // instead of vanishing.
+  function recaptchaToken(action) {
+    if (typeof grecaptcha === 'undefined' || !grecaptcha.execute) return Promise.resolve('');
+    const run = new Promise((resolve) => {
+      try {
+        grecaptcha.ready(() => {
+          try {
+            grecaptcha.execute(RECAPTCHA_KEY, { action: action }).then(resolve, () => resolve(''));
+          } catch (e) { resolve(''); }
+        });
+      } catch (e) { resolve(''); }
+    });
+    const timer = new Promise((resolve) => { setTimeout(() => resolve(''), 8000); });
+    return Promise.race([run, timer]);
+  }
+
+  // A submission only counts once the server actually accepted it. form-notify
+  // answers 200 with { accepted:false, reason } for blocked posts and /api/lead
+  // answers { success:false }, so res.ok on its own is not the whole story.
+  async function wasAccepted(settled) {
+    if (!settled || settled.status !== 'fulfilled') return false;
+    const res = settled.value;
+    const body = await res.json().catch(() => ({}));
+    return !!res.ok && body.accepted !== false && body.success !== false;
+  }
+
+  // Visible fallback so a failed submission is never mistaken for a sent one.
+  function showFormError(form) {
+    const host = form.querySelector('.form-actions') || form;
+    let p = form.querySelector('.form-error');
+    if (!p) {
+      p = document.createElement('p');
+      p.className = 'form-error';
+      p.setAttribute('role', 'alert');
+      p.style.cssText = 'margin-top:1rem;text-align:center;color:#b91c1c;font-size:0.9375rem;line-height:1.5;';
+      host.appendChild(p);
+    }
+    p.innerHTML = 'We could not send that just now. Please call us at ' +
+      '<a href="' + PHONE_TEL + '" style="color:#b91c1c;font-weight:700;">' + PHONE_TEXT + '</a>' +
+      ' or email <a href="mailto:' + CONTACT_EMAIL + '" style="color:#b91c1c;font-weight:700;">' + CONTACT_EMAIL + '</a>' +
+      ' so your message is not lost.';
+  }
+
   document.querySelectorAll('form[data-ajax]').forEach(form => {
     // Stamp a load-time timestamp so form-notify's "too fast" bot check passes
     // for real users (must be set on load, not at submit).
@@ -102,19 +154,19 @@
       const original = btn ? btn.textContent : '';
       if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
 
+      const staleError = form.querySelector('.form-error');
+      if (staleError) staleError.remove();
+
+      let delivered = false;
       try {
-        // reCAPTCHA token
-        if (typeof grecaptcha !== 'undefined' && grecaptcha.execute) {
-          await new Promise(r => grecaptcha.ready(r));
-          const token = await grecaptcha.execute(RECAPTCHA_KEY, { action: 'form_submit' });
-          const tField = form.querySelector('[name="recaptcha_token"]');
-          if (tField) tField.value = token;
-        }
+        // reCAPTCHA token (never fatal, never hangs)
+        const tField = form.querySelector('[name="recaptcha_token"]');
+        if (tField) tField.value = await recaptchaToken('form_submit');
 
         const data = Object.fromEntries(new FormData(form).entries());
 
         // Fire in parallel: notification endpoint (email + Google Sheet) AND the CRM (SuiteDash)
-        await Promise.allSettled([
+        const settled = await Promise.allSettled([
           fetch('https://myaieditor.com/api/form-notify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -127,18 +179,35 @@
           })
         ]);
 
-        // GTM dataLayer push
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'form_submission',
-          form_type: data.form_type || 'contact',
-          form_location: location.pathname
-        });
+        // Captured if EITHER pipeline took it (form-notify -> leads/email/sheet,
+        // or /api/lead -> SuiteDash, which is George's actual pipeline).
+        const notifyOk = await wasAccepted(settled[0]);
+        const crmOk = await wasAccepted(settled[1]);
+        delivered = notifyOk || crmOk;
+
+        if (delivered) {
+          // GTM dataLayer push (only on a real, server-accepted submission)
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'form_submission',
+            form_type: data.form_type || 'contact',
+            form_location: location.pathname
+          });
+        } else {
+          console.error('Form submit rejected by both endpoints', settled);
+        }
       } catch (err) {
         console.error('Form submit error:', err);
       }
 
-      // Show success
+      if (!delivered) {
+        // Real, visible fallback so the lead is not lost behind a fake thank-you.
+        if (btn) { btn.disabled = false; btn.textContent = original; }
+        showFormError(form);
+        return;
+      }
+
+      // Show success (only after the server accepted it)
       const fields = form.querySelector('.form-fields');
       const success = form.querySelector('.form-success');
       if (fields) fields.style.display = 'none';
@@ -159,12 +228,19 @@
       const orig = btn.textContent;
       btn.disabled = true; btn.textContent = 'Subscribing...';
 
+      const staleErr = form.parentNode && form.parentNode.querySelector('.newsletter-error');
+      if (staleErr) staleErr.remove();
+
       const data = Object.fromEntries(new FormData(form).entries());
       data.site_slug = 'curbelo-financial';
       data.form_type = 'newsletter';
+      // The newsletter used to post with no token at all, so form-notify
+      // rejected 100% of signups. Send one now (best effort, never fatal).
+      data.recaptcha_token = await recaptchaToken('newsletter');
 
+      let delivered = false;
       try {
-        await Promise.allSettled([
+        const settled = await Promise.allSettled([
           fetch('https://myaieditor.com/api/form-notify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -176,7 +252,24 @@
             body: JSON.stringify(data)
           })
         ]);
+        delivered = (await wasAccepted(settled[0])) || (await wasAccepted(settled[1]));
+        if (!delivered) console.error('Newsletter signup rejected by both endpoints', settled);
       } catch (err) { console.error(err); }
+
+      if (!delivered) {
+        btn.disabled = false;
+        btn.textContent = orig;
+        const note = document.createElement('div');
+        note.className = 'newsletter-error';
+        note.setAttribute('role', 'alert');
+        note.style.cssText = 'max-width:720px;margin:1rem auto 0;padding:0.75rem 1rem;border-radius:10px;background:#7f1d1d;color:#fff;font-size:0.9375rem;line-height:1.5;text-align:center;';
+        note.innerHTML = 'We could not sign you up just now. Please call us at ' +
+          '<a href="' + PHONE_TEL + '" style="color:#fff;font-weight:700;">' + PHONE_TEXT + '</a>' +
+          ' or email <a href="mailto:' + CONTACT_EMAIL + '" style="color:#fff;font-weight:700;">' + CONTACT_EMAIL + '</a>' +
+          ' and we will add you.';
+        if (form.parentNode) form.parentNode.insertBefore(note, form.nextSibling);
+        return;
+      }
 
       btn.textContent = 'Thank you!';
       btn.style.background = 'var(--green-500)';

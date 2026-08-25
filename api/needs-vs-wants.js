@@ -10,6 +10,7 @@ const FROM = "Curbelo Financial Coaching <tools@sitenotifications.org>";
 const COACH_EMAIL = "gcfinancialcoach21@gmail.com";
 const ADMIN_EMAIL = "justin@webeducationservices.com";
 const { pushLead, tagsFor } = require("./_crm.js");
+const { persistLead } = require("./_leads.js");
 
 // Form field name -> human label. Keep in sync with needs-vs-wants.html.
 const ITEMS = {
@@ -47,8 +48,13 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: false, error: "Missing required fields (name, email)" });
   }
 
-  // reCAPTCHA (cost protection) — only if secret configured
+  // reCAPTCHA (cost protection), only if the secret is configured.
+  // A low score is NOT a silent discard. It used to return success and throw the
+  // submission away (no CRM contact, no lead row, no email) while the visitor was
+  // shown a thank-you. Now we record the score, still capture the lead below, and
+  // skip only the expensive Claude generation.
   const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
+  let lowScore = null;
   if (RECAPTCHA_SECRET && body.recaptcha_token) {
     try {
       const r = await fetch("https://www.google.com/recaptcha/api/siteverify", {
@@ -57,11 +63,10 @@ module.exports = async (req, res) => {
         body: `secret=${encodeURIComponent(RECAPTCHA_SECRET)}&response=${encodeURIComponent(body.recaptcha_token)}`,
       });
       const v = await r.json();
-      if (v.success && typeof v.score === "number" && v.score < 0.3) {
-        return res.status(200).json({ success: true, skipped: "low recaptcha score" });
-      }
+      if (v.success && typeof v.score === "number" && v.score < 0.3) lowScore = v.score;
     } catch (e) { console.warn("[needs] recaptcha verify failed (continuing):", String(e)); }
   }
+  const flagged = lowScore !== null;
 
   // Collect their categorizations
   const choices = {};
@@ -78,7 +83,7 @@ module.exports = async (req, res) => {
   // Push the lead into the CRM (server-side, tagged).
   await pushLead({
     first_name: first, last_name: last, email,
-    tags: tagsFor("needs-vs-wants"),
+    tags: tagsFor("needs-vs-wants").concat(flagged ? ["Needs Review"] : []),
     notes: [
       "Tool: Needs vs Wants (Couples)",
       inputs.partner_name ? "Partner: " + inputs.partner_name : "",
@@ -86,8 +91,27 @@ module.exports = async (req, res) => {
       inputs.biggest_disagreement ? "Biggest disagreement: " + inputs.biggest_disagreement : "",
       "Source: curbelofinancialcoaching.com (/needs-vs-wants/)",
       "Submitted: " + new Date().toISOString(),
+      flagged ? "NEEDS REVIEW: low reCAPTCHA score (" + lowScore + "). The results were NOT generated or emailed. If this is a real person, follow up manually." : "",
     ],
   });
+
+  // Also persist to the shared `leads` table. Normally silent (no extra email:
+  // George already gets the result email and the tagged SuiteDash contact), but a
+  // flagged submission DOES notify so a false positive can be rescued.
+  await persistLead(
+    "needs-vs-wants",
+    {
+      ...body,
+      form_location: "/needs-vs-wants/",
+      ...(flagged ? { review_reason: "low_recaptcha_score", recaptcha_score: String(lowScore) } : {}),
+    },
+    { notify: flagged }
+  );
+
+  if (flagged) {
+    console.warn("[needs] low reCAPTCHA score", lowScore, "for", email, "- lead recorded + notified, generation skipped");
+    return res.status(200).json({ success: false, error: "We could not verify your submission" });
+  }
 
   const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
   const RESEND_API_KEY = process.env.RESEND_API_KEY;

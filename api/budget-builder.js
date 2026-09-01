@@ -55,7 +55,23 @@ module.exports = async (req, res) => {
         body: `secret=${encodeURIComponent(RECAPTCHA_SECRET)}&response=${encodeURIComponent(body.recaptcha_token)}`
       });
       const v = await r.json();
-      if (v.success && typeof v.score === "number" && v.score < 0.3) lowScore = v.score;
+      if (v.success) {
+        if (typeof v.score === "number" && v.score < 0.3) lowScore = v.score;
+      } else {
+        // Google rejected the token. Separate THEIR bad token from OUR bad config:
+        // invalid-input-secret / bad-request mean the secret configured here is
+        // wrong, and flagging on that would flag every real visitor -- the Elevate
+        // Smiles failure, where one wrong character destroyed 100% of submissions
+        // for four months while every visitor still saw a thank-you. So fail OPEN
+        // on our own misconfiguration, loudly, and flag only a genuinely bad token.
+        const codes = Array.isArray(v["error-codes"]) ? v["error-codes"] : [];
+        if (codes.includes("invalid-input-secret") || codes.includes("bad-request")) {
+          console.error("[budget] RECAPTCHA MISCONFIGURED", codes, "- allowing through, FIX THIS");
+        } else {
+          unverified = true;
+          console.warn("[budget] recaptcha token rejected", codes);
+        }
+      }
     } catch (e) { console.warn("[budget] recaptcha verify failed (continuing):", String(e)); }
   }
   const flagged = lowScore !== null || unverified;

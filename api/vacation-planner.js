@@ -40,6 +40,13 @@ module.exports = async (req, res) => {
   // skip only the expensive Claude generation.
   const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
   let lowScore = null;
+  // A MISSING token is not a pass. This block used to run only when a token was
+  // present, so a direct POST that simply omitted it skipped verification
+  // entirely and earned a Claude generation plus an email to any address it
+  // named -- billable spend and an open relay, not just a junk lead. Every real
+  // page here mints a token before submitting, so no token means not a browser.
+  let unverified = false;
+  if (RECAPTCHA_SECRET && !body.recaptcha_token) unverified = true;
   if (RECAPTCHA_SECRET && body.recaptcha_token) {
     try {
       const r = await fetch("https://www.google.com/recaptcha/api/siteverify", {
@@ -51,7 +58,7 @@ module.exports = async (req, res) => {
       if (v.success && typeof v.score === "number" && v.score < 0.3) lowScore = v.score;
     } catch (e) { console.warn("[vacation] recaptcha verify failed (continuing):", String(e)); }
   }
-  const flagged = lowScore !== null;
+  const flagged = lowScore !== null || unverified;
 
   const inputs = {
     name: first + " " + last,
@@ -84,24 +91,31 @@ module.exports = async (req, res) => {
       inputs.must_have ? "Must-have: " + inputs.must_have : "",
       "Source: curbelofinancialcoaching.com (/vacation-planner/)",
       "Submitted: " + new Date().toISOString(),
-      flagged ? "NEEDS REVIEW: low reCAPTCHA score (" + lowScore + "). The plan was NOT generated or emailed. If this is a real person, follow up manually." : "",
+      flagged ? "NEEDS REVIEW: " + (unverified ? "no reCAPTCHA token (posted outside the site form)" : "low reCAPTCHA score (" + lowScore + ")") + ". The plan was NOT generated or emailed. If this is a real person, follow up manually." : "",
     ],
   });
 
   // Also persist to the shared `leads` table. Normally silent (no extra email:
   // George already gets the result email and the tagged SuiteDash contact), but a
   // flagged submission DOES notify so a false positive can be rescued.
-  await persistLead(
+  const persisted = await persistLead(
     "vacation-planner",
     {
       ...body,
       form_location: "/vacation-planner/",
-      ...(flagged ? { review_reason: "low_recaptcha_score", recaptcha_score: String(lowScore) } : {}),
+      ...(flagged
+        ? unverified
+          ? { review_reason: "no_recaptcha_token" }
+          : { review_reason: "low_recaptcha_score", recaptcha_score: String(lowScore) }
+        : {}),
     },
-    { notify: flagged }
+    { notify: flagged, review: flagged }
   );
 
-  if (flagged) {
+  // An explicit spam verdict from form-notify stops the expensive work too.
+  const spamRejected = persisted && persisted.accepted === false;
+
+  if (flagged || spamRejected) {
     console.warn("[vacation] low reCAPTCHA score", lowScore, "for", email, "- lead recorded + notified, generation skipped");
     return res.status(200).json({ success: false, error: "We could not verify your submission" });
   }

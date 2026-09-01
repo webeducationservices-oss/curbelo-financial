@@ -30,6 +30,19 @@ function stringify(obj) {
 // opts.notify === true sends the normal form-notify email as well. Use it for
 // submissions we would otherwise have dropped (low reCAPTCHA score, blocklist
 // hit) so a human actually sees them and can rescue a false positive.
+//
+// opts.review === true means "this row was ALREADY judged and is being stored so
+// a human can look at it". Those skip form-notify's content filters, because the
+// whole point of the row is to survive a spam verdict -- letting form-notify drop
+// it would delete the safety net this file exists to provide.
+//
+// Everything else opts INTO those filters. The endpoints here are public: anyone
+// can POST to them, and the x-internal-secret makes form-notify treat the payload
+// as authenticated upstream and skip the gibberish-name and dotted-Gmail checks
+// that nothing on this site replicates.
+//
+// Returns { success, accepted }. `accepted` is false ONLY on an explicit spam
+// verdict, so a form-notify outage never looks like spam to a caller.
 async function persistLead(formType, fields, opts) {
   const secret = process.env.INTERNAL_FORM_SECRET;
   if (!secret) {
@@ -47,17 +60,22 @@ async function persistLead(formType, fields, opts) {
   delete payload._honey;
   delete payload.recaptcha_token;
 
+  const headers = { "Content-Type": "application/json", "x-internal-secret": secret };
+  if (!(opts && opts.review)) headers["x-internal-content-check"] = "1";
+
   try {
-    const r = await fetch(FORM_NOTIFY, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-internal-secret": secret },
-      body: JSON.stringify(payload),
-    });
+    const r = await fetch(FORM_NOTIFY, { method: "POST", headers, body: JSON.stringify(payload) });
     if (!r.ok) {
       console.error("[leads] form-notify rejected", r.status, (await r.text()).slice(0, 200));
       return { success: false, status: r.status };
     }
-    return { success: true };
+    // 200 never means accepted -- form-notify answers 200 for every rejection.
+    const j = await r.json().catch(() => null);
+    if (j && j.accepted === false) {
+      console.warn("[leads] form-notify judged this spam:", j.reason, "type=", formType);
+      return { success: true, accepted: false, reason: j.reason };
+    }
+    return { success: true, accepted: true };
   } catch (e) {
     console.error("[leads] form-notify request failed:", String(e));
     return { success: false, error: "request failed" };

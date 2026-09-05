@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
       review_reason: "spam_blocklist",
       blocked_by: spamReason,
       original_form_type: body.form_type || "contact",
-    });
+    }, { review: true });
     return res.status(200).json({ success: true, skipped: "spam" });
   }
 

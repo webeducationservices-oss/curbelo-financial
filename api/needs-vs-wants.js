@@ -55,6 +55,13 @@ module.exports = async (req, res) => {
   // skip only the expensive Claude generation.
   const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
   let lowScore = null;
+  // A MISSING token is not a pass. This block used to run only when a token was
+  // present, so a direct POST that simply omitted it skipped verification
+  // entirely and earned a Claude generation plus an email to any address it
+  // named -- billable spend and an open relay, not just a junk lead. Every real
+  // page here mints a token before submitting, so no token means not a browser.
+  let unverified = false;
+  if (RECAPTCHA_SECRET && !body.recaptcha_token) unverified = true;
   if (RECAPTCHA_SECRET && body.recaptcha_token) {
     try {
       const r = await fetch("https://www.google.com/recaptcha/api/siteverify", {
@@ -63,10 +70,26 @@ module.exports = async (req, res) => {
         body: `secret=${encodeURIComponent(RECAPTCHA_SECRET)}&response=${encodeURIComponent(body.recaptcha_token)}`,
       });
       const v = await r.json();
-      if (v.success && typeof v.score === "number" && v.score < 0.3) lowScore = v.score;
+      if (v.success) {
+        if (typeof v.score === "number" && v.score < 0.3) lowScore = v.score;
+      } else {
+        // Google rejected the token. Separate THEIR bad token from OUR bad config:
+        // invalid-input-secret / bad-request mean the secret configured here is
+        // wrong, and flagging on that would flag every real visitor -- the Elevate
+        // Smiles failure, where one wrong character destroyed 100% of submissions
+        // for four months while every visitor still saw a thank-you. So fail OPEN
+        // on our own misconfiguration, loudly, and flag only a genuinely bad token.
+        const codes = Array.isArray(v["error-codes"]) ? v["error-codes"] : [];
+        if (codes.includes("invalid-input-secret") || codes.includes("bad-request")) {
+          console.error("[needs] RECAPTCHA MISCONFIGURED", codes, "- allowing through, FIX THIS");
+        } else {
+          unverified = true;
+          console.warn("[needs] recaptcha token rejected", codes);
+        }
+      }
     } catch (e) { console.warn("[needs] recaptcha verify failed (continuing):", String(e)); }
   }
-  const flagged = lowScore !== null;
+  const flagged = lowScore !== null || unverified;
 
   // Collect their categorizations
   const choices = {};
@@ -91,24 +114,31 @@ module.exports = async (req, res) => {
       inputs.biggest_disagreement ? "Biggest disagreement: " + inputs.biggest_disagreement : "",
       "Source: curbelofinancialcoaching.com (/needs-vs-wants/)",
       "Submitted: " + new Date().toISOString(),
-      flagged ? "NEEDS REVIEW: low reCAPTCHA score (" + lowScore + "). The results were NOT generated or emailed. If this is a real person, follow up manually." : "",
+      flagged ? "NEEDS REVIEW: " + (unverified ? "no reCAPTCHA token (posted outside the site form)" : "low reCAPTCHA score (" + lowScore + ")") + ". The results were NOT generated or emailed. If this is a real person, follow up manually." : "",
     ],
   });
 
   // Also persist to the shared `leads` table. Normally silent (no extra email:
   // George already gets the result email and the tagged SuiteDash contact), but a
   // flagged submission DOES notify so a false positive can be rescued.
-  await persistLead(
+  const persisted = await persistLead(
     "needs-vs-wants",
     {
       ...body,
       form_location: "/needs-vs-wants/",
-      ...(flagged ? { review_reason: "low_recaptcha_score", recaptcha_score: String(lowScore) } : {}),
+      ...(flagged
+        ? unverified
+          ? { review_reason: "no_recaptcha_token" }
+          : { review_reason: "low_recaptcha_score", recaptcha_score: String(lowScore) }
+        : {}),
     },
-    { notify: flagged }
+    { notify: flagged, review: flagged }
   );
 
-  if (flagged) {
+  // An explicit spam verdict from form-notify stops the expensive work too.
+  const spamRejected = persisted && persisted.accepted === false;
+
+  if (flagged || spamRejected) {
     console.warn("[needs] low reCAPTCHA score", lowScore, "for", email, "- lead recorded + notified, generation skipped");
     return res.status(200).json({ success: false, error: "We could not verify your submission" });
   }
